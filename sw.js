@@ -1,6 +1,6 @@
 /* Shiti app shell. Generated from this build's checksummed assets. */
 const PREFIX = 'shiti-' + self.registration.scope.replace(/[^a-z0-9]/gi, '_') + '-';
-const CACHE = PREFIX + "5b49d1dbf2ee";
+const CACHE = PREFIX + "39f202414c30";
 const ASSETS = ["assets/index-BilgkUrT.css","assets/index-djsAna0q.js","favicon.svg","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png","index.html","manifest.webmanifest"].map(path => new URL(path, self.registration.scope).href);
 const INDEX = new URL('index.html', self.registration.scope).href;
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS))));
@@ -15,6 +15,8 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin || !request.url.startsWith(self.registration.scope)) return;
   if (request.mode === 'navigate') {
+    const appPaths = [new URL('./', self.registration.scope).pathname, new URL('index.html', self.registration.scope).pathname];
+    if (!appPaths.includes(url.pathname)) return;
     event.respondWith(fetch(request).then(response => {
       if (response.ok) { const copy = response.clone(); event.waitUntil(caches.open(CACHE).then(cache => cache.put(INDEX, copy))); }
       return response;
